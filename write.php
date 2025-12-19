@@ -1,46 +1,49 @@
 <?php
 /**
- * Step 9: 글 등록 기능
- * POST 데이터를 board 테이블에 INSERT
+ * 글 등록 기능 (리팩토링 버전)
+ * POST 데이터를 PostController를 통해 처리
  */
 
-require_once 'config.php';
+require_once __DIR__ . '/src/Container.php';
+require_once __DIR__ . '/src/Helper/SecurityHelper.php';
 
 // POST 요청 처리
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $pdo = getDBConnection();
+        // POST 데이터 확인 (디버깅)
+        error_log('POST data received: ' . print_r($_POST, true));
         
-        // POST 데이터 받기 및 XSS 방지
-        $title = isset($_POST['title']) ? htmlspecialchars(trim($_POST['title']), ENT_QUOTES, 'UTF-8') : '';
-        $author = isset($_POST['author']) ? htmlspecialchars(trim($_POST['author']), ENT_QUOTES, 'UTF-8') : '';
-        $content = isset($_POST['content']) ? $_POST['content'] : ''; // CKEditor는 HTML이므로 htmlspecialchars는 나중에 출력 시 적용
+        $controller = Container::getPostController();
         
-        // 유효성 검사
-        if (empty($title) || empty($author) || empty($content)) {
-            throw new Exception('모든 필드를 입력해주세요.');
+        // POST 데이터 받기 (trim만 적용, htmlspecialchars는 출력 시 적용)
+        $data = [
+            'title' => trim($_POST['title'] ?? ''),
+            'author' => trim($_POST['author'] ?? ''),
+            'content' => trim($_POST['content'] ?? '') // CKEditor HTML 콘텐츠
+        ];
+        
+        error_log('Processed data: title=' . strlen($data['title']) . ' chars, author=' . strlen($data['author']) . ' chars, content=' . strlen($data['content']) . ' chars');
+        
+        // Controller를 통해 게시물 등록
+        $controller->store($data);
+        exit; // store() 메서드에서 리다이렉트하므로 여기서는 실행되지 않음
+        
+    } catch (Throwable $e) {
+        // 모든 예외와 에러를 캐치
+        $error_message = '오류가 발생했습니다: ' . $e->getMessage();
+        
+        // 디버깅을 위해 에러 로그 출력
+        error_log('Post creation error: ' . $e->getMessage());
+        error_log('Stack trace: ' . $e->getTraceAsString());
+        error_log('File: ' . $e->getFile() . ' Line: ' . $e->getLine());
+        
+        // 개발 환경에서 상세 에러 표시
+        if (ini_get('display_errors')) {
+            $error_message .= ' (파일: ' . basename($e->getFile()) . ', 라인: ' . $e->getLine() . ')';
         }
-        
-        // 길이 제한 검증
-        if (strlen($title) > 255) {
-            throw new Exception('제목은 255자 이하여야 합니다.');
-        }
-        if (strlen($author) > 50) {
-            throw new Exception('작성자 이름은 50자 이하여야 합니다.');
-        }
-        
-        // PDO Prepared Statement로 SQL Injection 방지
-        $stmt = $pdo->prepare("INSERT INTO board (title, author, content) VALUES (?, ?, ?)");
-        $stmt->execute([$title, $author, $content]);
-        
-        // 성공 시 index.php로 리다이렉트
-        header("Location: index.php");
-        exit;
-        
-    } catch (Exception $e) {
-        $error_message = $e->getMessage();
     }
 }
+// GET 요청은 아래 HTML 폼을 표시
 ?>
 <!DOCTYPE html>
 <html lang="ko">
@@ -80,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <div>
                     <label for="content" class="block text-sm font-medium text-gray-700 mb-2">내용</label>
-                    <textarea id="content" name="content" rows="10" required 
+                    <textarea id="content" name="content" rows="10" 
                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                               placeholder="내용을 입력하세요"></textarea>
                 </div>
@@ -99,13 +102,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     <!-- Step 5: CKEditor 초기화 -->
     <script>
+        let editor;
+        
+        // CKEditor 초기화
         ClassicEditor
             .create(document.querySelector('#content'), {
                 language: 'ko'
             })
+            .then(createdEditor => {
+                editor = createdEditor;
+                console.log('✅ CKEditor initialized successfully');
+            })
             .catch(error => {
-                console.error(error);
+                console.error('❌ CKEditor initialization error:', error);
             });
+        
+        // 폼 제출 처리 - CKEditor 동기화 및 유효성 검사
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                console.log('📝 Form submit event triggered');
+                
+                // CKEditor가 초기화된 경우 내용을 textarea에 동기화
+                if (editor) {
+                    try {
+                        editor.updateSourceElement();
+                        console.log('✅ CKEditor content synced to textarea');
+                    } catch (error) {
+                        console.error('❌ Error syncing CKEditor content:', error);
+                    }
+                }
+                
+                // 유효성 검사
+                const title = document.querySelector('#title').value.trim();
+                const author = document.querySelector('#author').value.trim();
+                const contentElement = document.querySelector('#content');
+                const content = contentElement ? contentElement.value.trim() : '';
+                
+                console.log('Form validation:', {
+                    title: title.length + ' chars',
+                    author: author.length + ' chars',
+                    content: content.length + ' chars'
+                });
+                
+                // 유효성 검사 실패 시 제출 중단
+                if (!title || !author || !content) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    alert('모든 필드를 입력해주세요.\n\n제목: ' + (title ? '✓' : '✗') + '\n작성자: ' + (author ? '✓' : '✗') + '\n내용: ' + (content ? '✓' : '✗'));
+                    console.log('❌ Validation failed - preventing submit');
+                    return false;
+                }
+                
+                // 유효성 검사 통과 - 폼 제출 허용
+                console.log('✅ Form validation passed');
+                console.log('🚀 Form submission allowed');
+            });
+        }
+        
+        // 취소 버튼 클릭 이벤트
+        const cancelLink = document.querySelector('a[href="index.php"]');
+        if (cancelLink) {
+            cancelLink.addEventListener('click', function(e) {
+                const title = document.querySelector('#title').value.trim();
+                const author = document.querySelector('#author').value.trim();
+                const contentElement = document.querySelector('#content');
+                const content = contentElement ? contentElement.value.trim() : '';
+                
+                // 입력된 내용이 있으면 확인
+                if (title || author || content) {
+                    if (!confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
