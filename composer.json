@@ -1,0 +1,21 @@
+{
+    "name": "bbs/php-board-system",
+    "description": "PHP 기반 게시판 시스템",
+    "type": "project",
+    "require": {
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "BBS\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BBS\\Tests\\": "tests/"
+        }
+    }
+}

@@ -154,10 +154,24 @@ BBS/
 TDD(Test-Driven Development)의 RED 단계에서는 실패하는 테스트를 먼저 작성합니다. 아래는 작업 보고서를 분석하여 도출한 테스트 케이스 목록입니다.
 
 ### 1. 게시물 목록 기능 테스트
-- [ ] 게시물 목록이 최신순(내림차순)으로 정렬되어 표시되는지 테스트
-- [ ] 게시물 목록에 제목, 작성자, 작성일시, 조회수가 표시되는지 테스트
-- [ ] 게시물이 없을 때 빈 목록이 표시되는지 테스트
-- [ ] 게시물 목록에서 제목 클릭 시 상세보기 페이지로 이동하는지 테스트
+- [x] 게시물 목록이 최신순(내림차순)으로 정렬되어 표시되는지 테스트 (`tests/PostListTest.php::testPostsAreSortedByLatestFirst`)
+- [x] 게시물 목록에 제목, 작성자, 작성일시, 조회수가 표시되는지 테스트 (`tests/PostListTest.php::testPostListContainsRequiredFields`)
+- [x] 게시물이 없을 때 빈 목록이 표시되는지 테스트 (`tests/PostListTest.php::testEmptyPostListIsDisplayedWhenNoPosts`)
+- [x] 게시물 목록에서 제목 클릭 시 상세보기 페이지로 이동하는지 테스트 (`tests/PostListTest.php::testPostIdIsAvailableForDetailView`)
+
+**테스트 파일**: `tests/PostListTest.php`
+
+**테스트 실행 방법**:
+```bash
+# Composer 의존성 설치
+composer install
+
+# PHPUnit 테스트 실행
+vendor/bin/phpunit tests/PostListTest.php
+
+# 또는 전체 테스트 실행
+vendor/bin/phpunit
+```
 
 ### 2. 게시물 상세보기 기능 테스트
 - [ ] 게시물 ID로 특정 게시물의 상세 정보를 조회할 수 있는지 테스트
