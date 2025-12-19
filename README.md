@@ -268,16 +268,16 @@ TDD(Test-Driven Development)의 GREEN 단계에서는 RED 단계에서 작성한
 이 단계는 모든 기능의 기반이 되는 인프라를 구축합니다.
 
 #### 1.1 데이터베이스 연결 관리
-- [ ] `config.php`에 PDO 기반 데이터베이스 연결 함수 구현
-- [ ] 데이터베이스 연결 성공 시 정상 동작 확인
-- [ ] 잘못된 데이터베이스 설정 시 에러 처리 구현
-- [ ] PDO Prepared Statement 사용 준비
+- [x] `config.php`에 PDO 기반 데이터베이스 연결 함수 구현
+- [x] 데이터베이스 연결 성공 시 정상 동작 확인
+- [x] 잘못된 데이터베이스 설정 시 에러 처리 구현 (예외 throw)
+- [x] PDO Prepared Statement 사용 준비
 
 #### 1.2 에러 처리 기반 구축
-- [ ] 데이터베이스 연결 실패 시 적절한 에러 메시지 표시
-- [ ] SQL 쿼리 실행 실패 시 예외 처리 구현
-- [ ] 잘못된 파라미터 전달 시 에러 처리
-- [ ] NULL 값 처리 로직 구현
+- [x] 데이터베이스 연결 실패 시 적절한 에러 메시지 표시 (예외 throw)
+- [x] SQL 쿼리 실행 실패 시 예외 처리 구현 (PDO::ERRMODE_EXCEPTION)
+- [x] 잘못된 파라미터 전달 시 에러 처리 (PDO 기본 동작)
+- [x] NULL 값 처리 로직 구현 (데이터베이스 제약 조건 활용)
 
 **관련 테스트 파일**: `tests/DatabaseConnectionTest.php`, `tests/ErrorHandlingTest.php`
 

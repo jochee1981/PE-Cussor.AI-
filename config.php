@@ -39,7 +39,8 @@ function getDBConnection() {
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         return $pdo;
     } catch (PDOException $e) {
-        die("데이터베이스 연결 실패: " . $e->getMessage());
+        // die() 대신 예외를 다시 throw하여 테스트에서 검증 가능하도록 함
+        throw new PDOException("데이터베이스 연결 실패: " . $e->getMessage(), 0, $e);
     }
 }
 ?>
