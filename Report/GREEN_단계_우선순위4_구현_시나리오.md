@@ -207,5 +207,45 @@ if (strlen($author) > 50) {
 ---
 
 **작성일**: 2025-12-19  
-**상태**: 승인 대기 중  
-**구현 예정**: 승인 후 즉시 구현
+**상태**: ✅ 구현 완료  
+**구현 완료일**: 2025-12-19
+
+## ✅ 구현 완료 내역
+
+### 수정된 파일
+- `write.php`: 제목 길이 검증(255자), 작성자 길이 검증(50자) 추가
+- `edit.php`: 제목 길이 검증(255자), 작성자 길이 검증(50자) 추가
+- `comment.php`: 작성자 길이 검증(50자) 추가
+
+### 변경 사항
+```php
+// write.php, edit.php에 추가
+if (strlen($title) > 255) {
+    throw new Exception('제목은 255자 이하여야 합니다.');
+}
+if (strlen($author) > 50) {
+    throw new Exception('작성자 이름은 50자 이하여야 합니다.');
+}
+
+// comment.php에 추가
+if (strlen($author) > 50) {
+    throw new Exception('작성자 이름은 50자 이하여야 합니다.');
+}
+```
+
+### 테스트 실행 방법
+```bash
+# SecurityTest 실행
+vendor/bin/phpunit tests/SecurityTest.php
+
+# ValidationTest 실행
+vendor/bin/phpunit tests/ValidationTest.php
+
+# 전체 테스트 실행
+vendor/bin/phpunit
+```
+
+### 다음 단계
+- 테스트 실행하여 모든 테스트 통과 확인
+- 모든 GREEN 단계 구현 완료
+- REFACTOR 단계 준비
