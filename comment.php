@@ -21,6 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('모든 필드를 입력해주세요.');
         }
         
+        // 길이 제한 검증
+        if (strlen($author) > 50) {
+            throw new Exception('작성자 이름은 50자 이하여야 합니다.');
+        }
+        
         // 게시물 존재 확인
         $stmt = $pdo->prepare("SELECT id FROM board WHERE id = ?");
         $stmt->execute([$board_id]);
