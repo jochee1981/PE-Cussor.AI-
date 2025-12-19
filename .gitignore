@@ -1,0 +1,28 @@
+# PHP
+*.log
+*.cache
+*.tmp
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# XAMPP
+htdocs/
+
+# Environment
+.env
+config.local.php
+
+# Database backups
+*.sql
+*.sql.gz
+
