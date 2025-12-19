@@ -174,61 +174,79 @@ vendor/bin/phpunit
 ```
 
 ### 2. 게시물 상세보기 기능 테스트
-- [ ] 게시물 ID로 특정 게시물의 상세 정보를 조회할 수 있는지 테스트
-- [ ] 게시물 상세보기 시 조회수가 1 증가하는지 테스트
-- [ ] 존재하지 않는 게시물 ID로 접근 시 에러 처리가 되는지 테스트
-- [ ] 게시물 상세보기 페이지에 제목, 작성자, 내용, 작성일시, 조회수가 표시되는지 테스트
+- [x] 게시물 ID로 특정 게시물의 상세 정보를 조회할 수 있는지 테스트 (`tests/PostDetailTest.php::testPostCanBeRetrievedById`)
+- [x] 게시물 상세보기 시 조회수가 1 증가하는지 테스트 (`tests/PostDetailTest.php::testViewCountIncreasesWhenViewingPost`)
+- [x] 존재하지 않는 게시물 ID로 접근 시 에러 처리가 되는지 테스트 (`tests/PostDetailTest.php::testErrorHandlingForNonExistentPostId`)
+- [x] 게시물 상세보기 페이지에 제목, 작성자, 내용, 작성일시, 조회수가 표시되는지 테스트 (`tests/PostDetailTest.php::testPostDetailContainsAllRequiredFields`)
+
+**테스트 파일**: `tests/PostDetailTest.php`
 
 ### 3. 게시물 작성 기능 테스트
-- [ ] 제목, 작성자, 내용이 모두 입력되었을 때 게시물이 정상적으로 등록되는지 테스트
-- [ ] 제목이 비어있을 때 에러 메시지가 표시되는지 테스트
-- [ ] 작성자가 비어있을 때 에러 메시지가 표시되는지 테스트
-- [ ] 내용이 비어있을 때 에러 메시지가 표시되는지 테스트
-- [ ] 게시물 작성 후 목록 페이지로 리다이렉트되는지 테스트
-- [ ] 작성된 게시물이 데이터베이스에 저장되는지 테스트
+- [x] 제목, 작성자, 내용이 모두 입력되었을 때 게시물이 정상적으로 등록되는지 테스트 (`tests/PostCreateTest.php::testPostIsCreatedWhenAllFieldsAreProvided`)
+- [x] 제목이 비어있을 때 에러 메시지가 표시되는지 테스트 (`tests/PostCreateTest.php::testErrorWhenTitleIsEmpty`)
+- [x] 작성자가 비어있을 때 에러 메시지가 표시되는지 테스트 (`tests/PostCreateTest.php::testErrorWhenAuthorIsEmpty`)
+- [x] 내용이 비어있을 때 에러 메시지가 표시되는지 테스트 (`tests/PostCreateTest.php::testErrorWhenContentIsEmpty`)
+- [ ] 게시물 작성 후 목록 페이지로 리다이렉트되는지 테스트 (통합 테스트 필요)
+- [x] 작성된 게시물이 데이터베이스에 저장되는지 테스트 (`tests/PostCreateTest.php::testPostIsSavedToDatabase`)
+
+**테스트 파일**: `tests/PostCreateTest.php`
 
 ### 4. 게시물 수정 기능 테스트
-- [ ] 기존 게시물의 내용이 수정 폼에 정상적으로 로드되는지 테스트
-- [ ] 게시물 수정 후 변경사항이 데이터베이스에 반영되는지 테스트
-- [ ] 존재하지 않는 게시물 ID로 수정 시도 시 에러 처리가 되는지 테스트
-- [ ] 수정 시 필수 필드(제목, 작성자, 내용) 검증이 동작하는지 테스트
-- [ ] 게시물 수정 후 상세보기 페이지로 리다이렉트되는지 테스트
+- [x] 기존 게시물의 내용이 수정 폼에 정상적으로 로드되는지 테스트 (`tests/PostUpdateTest.php::testExistingPostCanBeLoadedForEditing`)
+- [x] 게시물 수정 후 변경사항이 데이터베이스에 반영되는지 테스트 (`tests/PostUpdateTest.php::testPostUpdateReflectsInDatabase`)
+- [x] 존재하지 않는 게시물 ID로 수정 시도 시 에러 처리가 되는지 테스트 (`tests/PostUpdateTest.php::testErrorHandlingForNonExistentPostIdOnUpdate`)
+- [x] 수정 시 필수 필드(제목, 작성자, 내용) 검증이 동작하는지 테스트 (`tests/PostUpdateTest.php::testRequiredFieldsValidationOnUpdate`)
+- [ ] 게시물 수정 후 상세보기 페이지로 리다이렉트되는지 테스트 (통합 테스트 필요)
+
+**테스트 파일**: `tests/PostUpdateTest.php`
 
 ### 5. 게시물 삭제 기능 테스트
-- [ ] 게시물 삭제 시 해당 게시물이 데이터베이스에서 제거되는지 테스트
-- [ ] 게시물 삭제 시 관련 댓글도 함께 삭제되는지 테스트
-- [ ] 존재하지 않는 게시물 ID로 삭제 시도 시 에러 처리가 되는지 테스트
-- [ ] 게시물 삭제 후 목록 페이지로 리다이렉트되는지 테스트
+- [x] 게시물 삭제 시 해당 게시물이 데이터베이스에서 제거되는지 테스트 (`tests/PostDeleteTest.php::testPostIsRemovedFromDatabaseOnDelete`)
+- [x] 게시물 삭제 시 관련 댓글도 함께 삭제되는지 테스트 (`tests/PostDeleteTest.php::testCommentsAreDeletedWhenPostIsDeleted`)
+- [x] 존재하지 않는 게시물 ID로 삭제 시도 시 에러 처리가 되는지 테스트 (`tests/PostDeleteTest.php::testErrorHandlingForNonExistentPostIdOnDelete`)
+- [ ] 게시물 삭제 후 목록 페이지로 리다이렉트되는지 테스트 (통합 테스트 필요)
+
+**테스트 파일**: `tests/PostDeleteTest.php`
 
 ### 6. 댓글 기능 테스트
-- [ ] 댓글이 정상적으로 등록되는지 테스트
-- [ ] 댓글 작성자와 내용이 비어있을 때 에러 메시지가 표시되는지 테스트
-- [ ] 특정 게시물의 댓글 목록이 최신순으로 표시되는지 테스트
-- [ ] 댓글이 등록된 게시물의 상세보기 페이지에 댓글이 표시되는지 테스트
-- [ ] 댓글이 데이터베이스에 저장되는지 테스트
-- [ ] 댓글 등록 후 페이지가 새로고침되어 댓글이 즉시 표시되는지 테스트
+- [x] 댓글이 정상적으로 등록되는지 테스트 (`tests/CommentTest.php::testCommentIsCreatedSuccessfully`)
+- [x] 댓글 작성자와 내용이 비어있을 때 에러 메시지가 표시되는지 테스트 (`tests/CommentTest.php::testErrorWhenCommentAuthorOrContentIsEmpty`)
+- [x] 특정 게시물의 댓글 목록이 최신순으로 표시되는지 테스트 (`tests/CommentTest.php::testCommentsAreSortedByLatestFirst`)
+- [ ] 댓글이 등록된 게시물의 상세보기 페이지에 댓글이 표시되는지 테스트 (통합 테스트 필요)
+- [x] 댓글이 데이터베이스에 저장되는지 테스트 (`tests/CommentTest.php::testCommentIsSavedToDatabase`)
+- [ ] 댓글 등록 후 페이지가 새로고침되어 댓글이 즉시 표시되는지 테스트 (통합 테스트 필요)
+
+**테스트 파일**: `tests/CommentTest.php`
 
 ### 7. 데이터베이스 연결 테스트
-- [ ] 데이터베이스 연결이 정상적으로 이루어지는지 테스트
-- [ ] 잘못된 데이터베이스 설정 시 에러 처리가 되는지 테스트
-- [ ] PDO Prepared Statement가 정상적으로 동작하는지 테스트
+- [x] 데이터베이스 연결이 정상적으로 이루어지는지 테스트 (`tests/DatabaseConnectionTest.php::testDatabaseConnectionIsSuccessful`)
+- [x] 잘못된 데이터베이스 설정 시 에러 처리가 되는지 테스트 (`tests/DatabaseConnectionTest.php::testErrorHandlingForInvalidDatabaseConfig`)
+- [x] PDO Prepared Statement가 정상적으로 동작하는지 테스트 (`tests/DatabaseConnectionTest.php::testPDOPreparedStatementWorks`)
+
+**테스트 파일**: `tests/DatabaseConnectionTest.php`
 
 ### 8. 보안 기능 테스트
-- [ ] XSS 공격 방지: `<script>` 태그가 포함된 입력값이 이스케이프 처리되는지 테스트
-- [ ] SQL Injection 방지: 악의적인 SQL 코드가 실행되지 않는지 테스트
-- [ ] HTML 특수문자(`<`, `>`, `&`, `"`, `'`)가 `htmlspecialchars()`로 처리되는지 테스트
-- [ ] POST 요청 외의 다른 HTTP 메서드에 대한 보안 처리가 되는지 테스트
+- [x] XSS 공격 방지: `<script>` 태그가 포함된 입력값이 이스케이프 처리되는지 테스트 (`tests/SecurityTest.php::testXSSPreventionWithScriptTag`)
+- [x] SQL Injection 방지: 악의적인 SQL 코드가 실행되지 않는지 테스트 (`tests/SecurityTest.php::testSQLInjectionPrevention`)
+- [x] HTML 특수문자(`<`, `>`, `&`, `"`, `'`)가 `htmlspecialchars()`로 처리되는지 테스트 (`tests/SecurityTest.php::testHTMLSpecialCharsEscaping`)
+- [ ] POST 요청 외의 다른 HTTP 메서드에 대한 보안 처리가 되는지 테스트 (통합 테스트 필요)
+
+**테스트 파일**: `tests/SecurityTest.php`
 
 ### 9. 데이터 유효성 검사 테스트
-- [ ] 제목 길이 제한 검증 테스트
-- [ ] 작성자 이름 길이 제한 검증 테스트
-- [ ] 내용 길이 제한 검증 테스트
-- [ ] 댓글 내용 길이 제한 검증 테스트
+- [x] 제목 길이 제한 검증 테스트 (`tests/ValidationTest.php::testTitleLengthValidation`)
+- [x] 작성자 이름 길이 제한 검증 테스트 (`tests/ValidationTest.php::testAuthorNameLengthValidation`)
+- [x] 내용 길이 제한 검증 테스트 (`tests/ValidationTest.php::testContentLengthValidation`)
+- [x] 댓글 내용 길이 제한 검증 테스트 (`tests/ValidationTest.php::testCommentContentLengthValidation`)
+
+**테스트 파일**: `tests/ValidationTest.php`
 
 ### 10. 에러 처리 테스트
-- [ ] 데이터베이스 연결 실패 시 적절한 에러 메시지가 표시되는지 테스트
-- [ ] SQL 쿼리 실행 실패 시 예외 처리가 되는지 테스트
-- [ ] 잘못된 파라미터 전달 시 에러 처리가 되는지 테스트
+- [x] 데이터베이스 연결 실패 시 적절한 에러 메시지가 표시되는지 테스트 (`tests/ErrorHandlingTest.php::testErrorMessageOnDatabaseConnectionFailure`)
+- [x] SQL 쿼리 실행 실패 시 예외 처리가 되는지 테스트 (`tests/ErrorHandlingTest.php::testExceptionHandlingOnSQLQueryFailure`)
+- [x] 잘못된 파라미터 전달 시 에러 처리가 되는지 테스트 (`tests/ErrorHandlingTest.php::testErrorHandlingForInvalidParameters`)
+
+**테스트 파일**: `tests/ErrorHandlingTest.php`
 
 ---
 
